@@ -4,7 +4,6 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
-// Import routes
 import { authRoutes } from './routes/auth.js';
 import { notesRoutes } from './routes/notes.js';
 
@@ -25,7 +24,6 @@ app.get('/', (req, res) => {
   res.json({ message: 'Better Notes API is running' });
 });
 
-// Register routes
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', notesRoutes);
 
