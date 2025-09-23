@@ -6,6 +6,7 @@ import path from 'path';
 
 import { authRoutes } from './routes/auth.js';
 import { notesRoutes } from './routes/notes.js';
+import { profileRoutes } from './routes/profile.js';
 
 const app = express();
 const port = parseInt(process.env.PORT || '3001');
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', notesRoutes);
+app.use('/api/profile', profileRoutes);
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);
