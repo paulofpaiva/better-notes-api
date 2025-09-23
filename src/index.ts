@@ -14,7 +14,8 @@ const port = parseInt(process.env.PORT || '3001');
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'http://localhost:8000'
+    'http://localhost:8000',
+    'https://better-notes-app-uyig.vercel.app'
   ],
   credentials: true,
 }));
