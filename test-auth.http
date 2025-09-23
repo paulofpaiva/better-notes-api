@@ -1,0 +1,49 @@
+### Testar API Better Notes - Autenticação
+
+### 1. Verificar se a API está rodando
+GET http://localhost:3001/
+
+### 2. Registrar novo usuário
+POST http://localhost:3001/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "teste@exemplo.com",
+  "password": "senha123",
+  "name": "Usuário Teste"
+}
+
+### 3. Fazer login
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "teste@exemplo.com",
+  "password": "senha123"
+}
+
+### 4. Verificar dados do usuário autenticado (substitua o token)
+GET http://localhost:3001/api/auth/me
+Cookie: auth_token=SEU_JWT_TOKEN_AQUI
+
+### 5. Fazer logout
+POST http://localhost:3001/api/auth/logout
+
+### 6. Testar login com credenciais inválidas
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "teste@exemplo.com",
+  "password": "senha_errada"
+}
+
+### 7. Testar registro com email duplicado
+POST http://localhost:3001/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "teste@exemplo.com",
+  "password": "outrasenha123",
+  "name": "Outro Usuário"
+}
