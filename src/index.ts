@@ -8,7 +8,7 @@ import { authRoutes } from './routes/auth.js';
 import { notesRoutes } from './routes/notes.js';
 
 const app = express();
-const port = parseInt(process.env.PORT || '3000');
+const port = parseInt(process.env.PORT || '3001');
 
 app.use(cors({
   origin: [
