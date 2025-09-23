@@ -8,7 +8,7 @@ import { authRoutes } from './routes/auth.js';
 import { notesRoutes } from './routes/notes.js';
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = parseInt(process.env.PORT || '8080');
 
 app.use(cors({
   origin: [
@@ -33,6 +33,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(500).json({ error: errorMessage });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Better Notes API running on port ${PORT}`);
 });
