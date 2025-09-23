@@ -48,23 +48,9 @@ npm install
 cp env.example .env
 ```
 
-3. **Set up your environment variables in `.env`:**
-```env
-# Database
-DATABASE_URL=postgresql://username:password@localhost:5432/better_notes
+3. Configure o `DATABASE_URL` no arquivo `.env` com suas credenciais do PostgreSQL.
 
-# JWT - Use a strong secret key in production
-JWT_SECRET=your-super-secret-jwt-key-here-make-it-very-long-and-random
-
-# Server
-PORT=3001
-NODE_ENV=development
-
-# API Base URL (for serving static files)
-API_BASE_URL=http://localhost:3001
-```
-
-4. **Run database migrations:**
+4. Execute as migrações do banco:
 ```bash
 npm run db:generate
 npm run db:migrate
