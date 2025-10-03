@@ -2,19 +2,28 @@ import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { db } from '../db/index.js';
 import { notes, noteContentSchema } from '../schemas/notes.js';
+import { notesMedia } from '../schemas/notesMedia.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { eq, and, lt } from 'drizzle-orm';
 
 const router = Router();
 
+const mediaItemSchema = z.object({
+  mediaUrl: z.string().url(),
+  mediaType: z.enum(['image', 'video', 'gif']),
+  position: z.number().int().min(0),
+});
+
 const createNoteSchema = z.object({
   title: z.string().optional(),
   content: noteContentSchema,
+  media: z.array(mediaItemSchema).optional().default([]),
 });
 
 const updateNoteSchema = z.object({
   title: z.string().optional(),
   content: noteContentSchema.optional(),
+  media: z.array(mediaItemSchema).optional(), // se enviado, substitui as mídias
 });
 
 router.get('/', authenticateToken, async (req: Request, res: Response) => {
@@ -71,7 +80,7 @@ router.get('/', authenticateToken, async (req: Request, res: Response) => {
 
 router.post('/', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const { title, content } = createNoteSchema.parse(req.body);
+    const { title, content, media } = createNoteSchema.parse(req.body);
 
     const newNote = await db
       .insert(notes)
@@ -82,9 +91,28 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
       })
       .returning();
 
+    if (media && media.length > 0) {
+      await db.insert(notesMedia).values(
+        media.map(m => ({
+          noteId: newNote[0].id,
+          mediaUrl: m.mediaUrl,
+          mediaType: m.mediaType,
+          position: m.position,
+        }))
+      );
+    }
+
+    const createdMedia = await db
+      .select()
+      .from(notesMedia)
+      .where(eq(notesMedia.noteId, newNote[0].id));
+
     res.status(201).json({
       message: 'Note created successfully',
-      note: newNote[0],
+      note: {
+        ...newNote[0],
+        media: createdMedia,
+      },
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -132,7 +160,7 @@ router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const noteId = req.params.id;
 
-    const { title, content } = updateNoteSchema.parse(req.body);
+    const { title, content, media } = updateNoteSchema.parse(req.body);
 
     const updatedNote = await db
       .update(notes)
@@ -153,9 +181,31 @@ router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Note not found' });
     }
 
+    if (Array.isArray(media)) {
+      await db.delete(notesMedia).where(eq(notesMedia.noteId, noteId));
+      if (media.length > 0) {
+        await db.insert(notesMedia).values(
+          media.map(m => ({
+            noteId,
+            mediaUrl: m.mediaUrl,
+            mediaType: m.mediaType,
+            position: m.position,
+          }))
+        );
+      }
+    }
+
+    const currentMedia = await db
+      .select()
+      .from(notesMedia)
+      .where(eq(notesMedia.noteId, noteId));
+
     res.json({
       message: 'Note updated successfully',
-      note: updatedNote[0],
+      note: {
+        ...updatedNote[0],
+        media: currentMedia,
+      },
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

@@ -4,17 +4,18 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
-// Import routes
 import { authRoutes } from './routes/auth.js';
 import { notesRoutes } from './routes/notes.js';
+import { profileRoutes } from './routes/profile.js';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const port = parseInt(process.env.PORT || '3001');
 
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'http://localhost:8000'
+    'http://localhost:8000',
+    'https://better-notes-app-uyig.vercel.app'
   ],
   credentials: true,
 }));
@@ -25,9 +26,9 @@ app.get('/', (req, res) => {
   res.json({ message: 'Better Notes API is running' });
 });
 
-// Register routes
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', notesRoutes);
+app.use('/api/profile', profileRoutes);
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);
@@ -35,6 +36,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(500).json({ error: errorMessage });
 });
 
-app.listen(PORT, () => {
-  console.log(`Better Notes API running on port ${PORT}`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Better Notes API running on port ${port}`);
 });
