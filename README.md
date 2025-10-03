@@ -4,37 +4,12 @@ A modern Node.js API built with Express, Drizzle ORM, and PostgreSQL for rich no
 
 ## Features
 
-- 🔐 **JWT Authentication** with secure password requirements
-- 📝 **Rich Text Notes** with structured content (headings, paragraphs, lists)
-- 🔄 **Cursor-based Pagination** for efficient data loading
-- 🗑️ **Token Blacklisting** for secure logout
-- 🛡️ **Input Validation** with Zod schemas
-- 🎨 **TypeScript** for type safety
-
-## Project Structure
-
-```
-better-notes-api/
-├── src/
-│   ├── db/
-│   │   └── index.ts          # Database configuration
-│   ├── middleware/
-│   │   └── auth.ts           # Authentication middleware
-│   ├── routes/
-│   │   ├── auth.ts           # Authentication routes
-│   │   └── notes.ts          # Notes CRUD routes
-│   ├── schemas/              # Drizzle schemas
-│   │   ├── users.ts          # Users schema
-│   │   ├── notes.ts          # Notes schema with rich content
-│   │   └── notesMedia.ts     # Notes media schema
-│   └── index.ts              # Main server file
-├── drizzle/                  # Database migrations
-├── docs/                     # Documentation
-├── drizzle.config.ts         # Drizzle configuration
-├── package.json
-├── tsconfig.json
-└── env.example               # Environment variables example
-```
+- **JWT Authentication** with secure password requirements
+- **Rich Text Notes** with structured content (headings, paragraphs, lists)
+- **Cursor-based Pagination** for efficient data loading
+- **Token Blacklisting** for secure logout
+- **Input Validation** with Zod schemas
+- **TypeScript** for type safety
 
 ## Setup
 
@@ -59,138 +34,6 @@ npm run db:migrate
 5. **Start the development server:**
 ```bash
 npm run dev
-```
-
-## Database Schema
-
-### Users Table
-- `id` (UUID) - Primary key
-- `email` (VARCHAR) - Unique user email
-- `password_hash` (VARCHAR) - Bcrypt hashed password
-- `name` (VARCHAR) - User display name
-- `created_at` (TIMESTAMP) - Account creation date
-
-### Notes Table
-- `id` (UUID) - Primary key
-- `user_id` (UUID) - Foreign key to users
-- `title` (TEXT) - Note title
-- `content` (JSONB) - Rich structured content
-- `created_at` (TIMESTAMP) - Note creation date
-- `updated_at` (TIMESTAMP) - Last modification date
-
-### Notes Media Table
-- `id` (SERIAL) - Primary key
-- `note_id` (UUID) - Foreign key to notes
-- `media_url` (TEXT) - Media file URL
-- `media_type` (VARCHAR) - Media type (image, video, gif)
-- `position` (INTEGER) - Display order
-- `created_at` (TIMESTAMP) - Upload date
-
-### Blacklisted Tokens Table
-- `id` (SERIAL) - Primary key
-- `token` (TEXT) - Invalidated JWT token
-- `expires_at` (TIMESTAMP) - Token expiration
-- `created_at` (TIMESTAMP) - Blacklist date
-
-## API Endpoints
-
-### Authentication
-
-#### Sign Up
-```http
-POST /api/auth/sign-up
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "SecurePass123!",
-  "name": "John Doe"
-}
-```
-
-#### Sign In
-```http
-POST /api/auth/sign-in
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "SecurePass123!"
-}
-```
-
-#### Logout
-```http
-POST /api/auth/logout
-Cookie: auth_token=your-jwt-token
-```
-
-#### Get Current User
-```http
-GET /api/auth/me
-Cookie: auth_token=your-jwt-token
-```
-
-### Notes
-
-#### List Notes (Paginated)
-```http
-GET /api/notes?limit=10&cursor=2024-01-15T10:30:00.000Z
-Cookie: auth_token=your-jwt-token
-```
-
-#### Create Note
-```http
-POST /api/notes
-Content-Type: application/json
-Cookie: auth_token=your-jwt-token
-
-{
-  "title": "My Note",
-  "content": [
-    {
-      "type": "heading",
-      "level": 1,
-      "children": [{"text": "Main Title", "bold": true}]
-    },
-    {
-      "type": "paragraph",
-      "children": [{"text": "This is a paragraph with "}, {"text": "bold text", "bold": true}]
-    },
-    {
-      "type": "list",
-      "style": "bullet",
-      "children": [
-        {"text": "Item 1"},
-        {"text": "Item 2"}
-      ]
-    }
-  ]
-}
-```
-
-#### Get Note
-```http
-GET /api/notes/{note-id}
-Cookie: auth_token=your-jwt-token
-```
-
-#### Update Note
-```http
-PUT /api/notes/{note-id}
-Content-Type: application/json
-Cookie: auth_token=your-jwt-token
-
-{
-  "title": "Updated Title",
-  "content": [...]
-}
-```
-
-#### Delete Note
-```http
-DELETE /api/notes/{note-id}
-Cookie: auth_token=your-jwt-token
 ```
 
 ## Rich Content Format
@@ -234,24 +77,6 @@ Notes support structured content with the following block types:
 }
 ```
 
-## Password Requirements
-
-- Minimum 6 characters
-- At least 1 number
-- At least 1 special character: `!@#$%^&*()_+-=[]{};':"\\|,.<>/?`
-
-## Pagination
-
-The notes endpoint uses cursor-based pagination:
-
-- `limit`: Number of items per page (1-50, default: 10)
-- `cursor`: ISO timestamp of the last item from previous page
-
-Response includes:
-- `hasNextPage`: Boolean indicating if more pages exist
-- `nextCursor`: Timestamp for next page request
-- `limit`: Current page size
-
 ## Available Scripts
 
 - `npm run dev` - Start development server with hot reload
@@ -270,7 +95,7 @@ Response includes:
 - **Input Validation** with Zod schemas
 - **CORS** configured for development origins
 
-## Technologies Used
+## Tech Used
 
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
@@ -282,8 +107,6 @@ Response includes:
 - **bcryptjs** - Password hashing
 
 ## Development
-
-The API runs on `http://localhost:3001` by default. All responses are in English and follow RESTful conventions.
 
 For production deployment, ensure:
 - Set `NODE_ENV=production`
